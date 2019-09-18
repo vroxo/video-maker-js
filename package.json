@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/vroxo/video-maker-js#readme",
   "dependencies": {
-    "readline-sync": "^1.4.10"
+    "readline-sync": "^1.4.10",
+    "rss-parser": "^3.7.2"
   }
 }
