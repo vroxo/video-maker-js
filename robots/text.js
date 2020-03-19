@@ -12,11 +12,18 @@ const nlu = new NaturalLanguageUnderstandingV1({
     url: credeltials_watson.url
 });
 
+const state = require('./state');
+
 async function robot(content) {
+    content = state.load();
+
     await fetchContentFromWikipedia(content);
     sanitizeContent(content);
     breakContentIntoSentences(content);
+    limitMaximumSentences(content);
     await fetchKeywordsOfAllSentences(content);
+
+    state.save(content);
 
     async function fetchContentFromWikipedia(content){
         const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey);
@@ -56,15 +63,21 @@ async function robot(content) {
         })
     }
 
+    function limitMaximumSentences(content) {
+        content.sentences = content.sentences.slice(0, content.maximumSentences)
+    }
+
     async function fetchKeywordsOfAllSentences(content) {
         console.log('> [text-robot] Starting to fetch keywords from Watson');
 
         for (const sentence of content.sentences) {
             console.log(`> [text-robot] Sentence: "${sentence.text}"`);
 
-            const keywords = await fetchWatsonAndReturnKeywords(sentence.text);
-            sentence.keywords = keywords;
-            console.log(keywords);
+            try {
+                sentence.keywords = await fetchWatsonAndReturnKeywords(sentence.text);
+            }catch (err) {
+                console.log(err.toString())
+            }
 
             console.log(`> [text-robot] Keywords: ${sentence.keywords.join(', ')}\n`)
         }
