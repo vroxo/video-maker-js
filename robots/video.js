@@ -8,11 +8,12 @@ const rootPath = path.resolve(__dirname, "..");
 const fromRoot = relPath => path.resolve(rootPath, relPath)
 
 async function robot(){
+    console.log('> [video-robot] Starting...');
     const content = state.load();
 
     await convertAllImages(content);
     await createAllSentenceImages(content);
-    await createYouTubeThumbnail();
+    await createYoutubeThumbnail();
     await createAfterEffectsScript(content);
     await renderVideoWithAfterEffects();
 
@@ -123,7 +124,7 @@ async function robot(){
         })
     }
 
-    async function createYouTubeThumbnail() {
+    async function createYoutubeThumbnail() {
         return new Promise((resolve, reject) => {
             gm()
                 .in(fromRoot('./content/0-converted.png'))
@@ -132,7 +133,7 @@ async function robot(){
                         return reject(error)
                     }
 
-                    console.log('> [video-robot] YouTube thumbnail created')
+                    console.log('> [video-robot] YouTube thumbnail created');
                     resolve()
                 })
         })
