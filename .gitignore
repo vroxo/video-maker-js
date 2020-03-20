@@ -63,4 +63,7 @@ typings/
 .idea
 credentials/*.json
 content/*.json
+content/*.png
+content/*.jpg
+
 .DS_Store
